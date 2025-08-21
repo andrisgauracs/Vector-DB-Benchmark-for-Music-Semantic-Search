@@ -14,6 +14,7 @@ from databases.milvus_client import Milvus
 from databases.weaviate_client import WeaviateDB
 from databases.pinecone_client import PineconeClient
 from databases.topk_client import TopKClient
+from databases.sqlite_client import SQLite
 
 
 # --------------------
@@ -61,6 +62,8 @@ def get_db(name: str) -> Any:
         return client
     if name == "topk":
         return TopKClient()
+    if name == "sqlite":
+        return SQLite(db_path=os.getenv("SQLITE_DB_PATH", "music_vectors.db"))
     raise ValueError(f"Unknown DB {name}")
 
 
@@ -84,7 +87,7 @@ app.add_middleware(
 class SearchRequest(BaseModel):
     query: str
     topk: int = 10
-    dbs: List[str] = ["qdrant", "milvus", "weaviate", "pinecone", "topk"]
+    dbs: List[str] = ["qdrant", "milvus", "weaviate", "pinecone", "topk", "sqlite"]
     model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
 
@@ -122,7 +125,7 @@ def _startup_warmup():
         # Ignore model warmup failures; they will surface on first request
         pass
 
-    dbs = os.getenv("UI_WARMUP_DBS", "qdrant,milvus,weaviate,pinecone,topk").split(",")
+    dbs = os.getenv("UI_WARMUP_DBS", "qdrant,milvus,weaviate,pinecone,topk,sqlite").split(",")
     qvec: Optional[List[float]] = None
     for name in [d.strip() for d in dbs if d.strip()]:
         try:
