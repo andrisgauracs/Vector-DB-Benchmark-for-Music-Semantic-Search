@@ -22,6 +22,7 @@ pymilvus==2.6.0
 weaviate-client==v4.16.8
 topk-sdk
 pinecone>=4.0.0
+sqlite-vec
 google-api-core
 protobuf
 googleapis-common-protos

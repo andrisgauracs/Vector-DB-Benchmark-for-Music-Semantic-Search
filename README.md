@@ -8,7 +8,7 @@ This repository benchmarks multiple vector databases for music semantic search, 
 ## Features
 
 - **Benchmarks ingest time, query latency, recall, and hit rate** for top-k search
-- **Supports Qdrant, Milvus, Weaviate, Pinecone, and TopK** (local or cloud)
+- **Supports Qdrant, Milvus, Weaviate, Pinecone, TopK, and SQLite** (local or cloud)
 - **Flexible embedding**: Use `sentence-transformers` (default) or OpenAI embeddings
 - **Heuristic relevance**: Weak label matching using tags/genres for recall/hit metrics
 - **Rich CLI**: Many flags for DB selection, concurrency, top-k sweep, teardown, etc.
@@ -62,7 +62,7 @@ python embeddings/embed.py --csv data/muse.csv --out data/embeddings.parquet
 5. **Run the benchmark**
 
 ```sh
-python benchmark.py --csv data/muse.csv --embeddings data/embeddings.parquet --dbs qdrant milvus weaviate pinecone topk --topk 10 --repetitions 5
+python benchmark.py --csv data/muse.csv --embeddings data/embeddings.parquet --dbs qdrant milvus weaviate pinecone topk sqlite --topk 10 --repetitions 5
 # See all CLI flags with: python benchmark.py --help
 ```
 
@@ -76,12 +76,12 @@ python benchmark.py --csv data/muse.csv --embeddings data/embeddings.parquet --d
 ## CLI Usage
 
 ```sh
-python benchmark.py --csv data/muse.csv --embeddings data/embeddings.parquet --dbs qdrant milvus weaviate pinecone topk --topk 10 --repetitions 5 [--teardown_after_benchmark]
+python benchmark.py --csv data/muse.csv --embeddings data/embeddings.parquet --dbs qdrant milvus weaviate pinecone topk sqlite --topk 10 --repetitions 5 [--teardown_after_benchmark]
 ```
 
 **Key flags:**
 
-- `--dbs`: List of DBs to benchmark (qdrant, milvus, weaviate, pinecone, topk)
+- `--dbs`: List of DBs to benchmark (qdrant, milvus, weaviate, pinecone, topk, sqlite)
 - `--topk`: Top-k for search (default: 10)
 - `--topk_sweep`: List of k values to sweep (e.g. 5 10 50)
 - `--repetitions`: Number of repetitions per query
@@ -113,7 +113,7 @@ The `ui/` folder provides a FastAPI backend and static frontend for live, side-b
 
 ### UI Features
 
-- Compare Qdrant, Milvus, Weaviate, Pinecone, and TopK in parallel
+- Compare Qdrant, Milvus, Weaviate, Pinecone, TopK, and SQLite in parallel
 - Per-DB query latency in ms
 - Simple, modern UI (HTML/JS/CSS)
 
@@ -145,7 +145,7 @@ uvicorn backend.server:app --reload --port 8000
 
 - `benchmark.py` – Main benchmarking script (CLI)
 - `embeddings/embed.py` – Embedding generation (sentence-transformers or OpenAI)
-- `databases/` – DB client wrappers (Qdrant, Milvus, Weaviate, Pinecone, TopK)
+- `databases/` – DB client wrappers (Qdrant, Milvus, Weaviate, Pinecone, TopK, SQLite)
 - `plot_benchmarks.py` – Plots and summary tables
 - `results/` – Output metrics and plots
 - `ui/` – Web UI (FastAPI backend + static frontend)
@@ -166,4 +166,4 @@ uvicorn backend.server:app --reload --port 8000
 
 - [Muse Musical Sentiment dataset](https://www.kaggle.com/datasets/cakiki/muse-the-musical-sentiment-dataset)
 - [sentence-transformers](https://www.sbert.net/)
-- [Qdrant](https://qdrant.tech/), [Milvus](https://milvus.io/), [Weaviate](https://weaviate.io/), [Pinecone](https://www.pinecone.io/), [TopK](https://topk.io/)
+- [Qdrant](https://qdrant.tech/), [Milvus](https://milvus.io/), [Weaviate](https://weaviate.io/), [Pinecone](https://www.pinecone.io/), [TopK](https://topk.io/), [sqlite-vec](https://github.com/asg017/sqlite-vec)

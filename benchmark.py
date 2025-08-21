@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import mplcyberpunk
+from databases.sqlite_client import SQLite
 
 plt.style.use("cyberpunk")
 
@@ -58,6 +59,9 @@ def get_db(name: str, args) -> Any:
     if name == "pinecone":
         # You may want to make dimension configurable; default to 384
         return PineconeClient(dimension=getattr(args, "dim", 384))
+
+    if name == "sqlite":
+        return SQLite(db_path=os.getenv("SQLITE_DB_PATH", "music_vectors.db"))
 
     return None
 
